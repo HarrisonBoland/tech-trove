@@ -20,11 +20,12 @@ async function getStripeProducts() {
     expand: ["data.product"],
   });
   const prices = res.data;
+
   return prices;
 }
 
 export default async function Home() {
-  const products = await getStripeProducts();
+  const products: Stripe.Price[] = await getStripeProducts();
   // const [items, setItems] = useState<any[]>([]);
   // const [newItem, setNewItem] = useState({ name: "", price: "" });
   // const [total, setTotal] = useState(0);

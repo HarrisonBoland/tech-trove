@@ -1,15 +1,27 @@
 "use client";
 import useCart from "@/store/store";
 import { useRouter } from "next/navigation";
+import Stripe from "stripe";
 
-export default function ProductCard(product: any) {
-  const { id, unit_amount } = product.product;
-  const { images, name, description } = product.product.product;
+export default function ProductCard({ product }: { product: Stripe.Price }) {
+  const { id: price_id, unit_amount: cost } = product;
+  const productInfo: Stripe.Product = product.product as Stripe.Product;
+  const { name, description, images } = productInfo;
+
+  const setProduct = useCart((state) => state.setProduct);
 
   const router = useRouter();
 
   function onProductClick() {
-    router.push("/product?price_id=" + id);
+    const newProduct = {
+      name,
+      description,
+      price_id,
+      cost,
+      productInfo,
+    };
+    setProduct(newProduct);
+    router.push("/product?price_id=" + price_id);
   }
 
   return (
@@ -21,7 +33,7 @@ export default function ProductCard(product: any) {
       <div className="flex flex-col gap-2 p-4">
         <div className="flex items-center justify-between">
           <h3>{name}</h3>
-          <p>${unit_amount / 100}</p>
+          <p>{cost ? `$${cost / 100}` : ""}</p>
         </div>
         <p className="text-sm">{description}</p>
       </div>

@@ -1,15 +1,26 @@
+import { CartType, ProductType } from "@/types/modelTypes";
 import { create } from "zustand";
 
-const useCart = create((set, get) => ({
+const useCart = create<CartType>((set, get) => ({
   cart: [],
-  product: {},
+  product: null,
 
-  setProduct: (params: any) => {
-    const { product } = params;
+  openModal: false,
+
+  setOpenModal: () => {
     set((state: any) => {
       return {
         ...state,
-        product: product,
+        openModal: !state.openModal,
+      };
+    });
+  },
+
+  setProduct: (newProduct: ProductType) => {
+    set((state: any) => {
+      return {
+        ...state,
+        product: newProduct,
       };
     });
   },
